@@ -10,17 +10,12 @@ const DESC: &str = "\
 Every single vanilla gear piece, including body, legs, hands, and feet, with an asymmetrical body texture.
 Enjoy your tattoos and other without having to go searching for the specific upscale for some random gearpiece.
 
-Automatically converted with https://github.com/Sevii77/ffxiv_uv_asymetrizer
+Automatically created with a tool I made, the source code of which can be found here: https://github.com/Sevii77/ffxiv_uv_asymetrizer
 
 Material files:
-\tBibo: _q.mtrl
+\tBibo: _bibo.mtrl
 \tTBSE: _b.mtrl
 \tHR3: _b.mtrl
-
-Q: Why does bibo not use _bibo.mtrl?
-A: The way I modify the mdl files doesn't allow me to make any changes to size, I simply provide the mtrl files from my install.
-\tThis shouldn't cause any issue since the textures are all the same, but if it does let me know.
-\tI tried using file swaps to swap _q for _bibo, but that didn't seem to work.
 
 Q: Why does the Bibo/HR3 and TBSE versions have conflicts?
 A: If a non male hyur body doesn't have a specific model, it defaults to that.
@@ -46,35 +41,36 @@ fn main() {
 		let mod_path = format!("mod/{mod_name}");
 		_ = std::fs::create_dir_all(format!("{mod_path}/files"));
 		
-		let mut files;
-		if body_type == BodyType::TallFemale {
-			files = vec![
-				("chara/human/c0201/obj/body/b0001/material/v0001/mt_c0201b0001_q.mtrl".to_string(), "files/bibomtrl/c0201b0001.mtrl".to_string()),
-				("chara/human/c0401/obj/body/b0001/material/v0001/mt_c0401b0001_q.mtrl".to_string(), "files/bibomtrl/c0401b0001.mtrl".to_string()),
-				("chara/human/c1401/obj/body/b0001/material/v0001/mt_c1401b0001_q.mtrl".to_string(), "files/bibomtrl/c1401b0001.mtrl".to_string()),
-				("chara/human/c1401/obj/body/b0101/material/v0001/mt_c1401b0101_q.mtrl".to_string(), "files/bibomtrl/c1401b0101.mtrl".to_string()),
-				("chara/human/c1601/obj/body/b0001/material/v0001/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v1.mtrl".to_string()),
-				("chara/human/c1601/obj/body/b0001/material/v0002/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v2.mtrl".to_string()),
-				("chara/human/c1601/obj/body/b0001/material/v0003/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v3.mtrl".to_string()),
-				("chara/human/c1601/obj/body/b0001/material/v0004/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v4.mtrl".to_string()),
-				("chara/human/c1601/obj/body/b0001/material/v0005/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v5.mtrl".to_string()),
-				("chara/human/c1801/obj/body/b0001/material/v0001/mt_c1801b0001_q.mtrl".to_string(), "files/bibomtrl/c1801b0001.mtrl".to_string()),
-			];
-			
-			_ = std::fs::create_dir(format!("{mod_path}/files/bibomtrl"));
-			for (_, path) in &files {
-				std::fs::copy(&path, format!("{mod_path}/{path}")).unwrap();
-			}
-		} else {
-			files = Vec::new();
-		}
+		let mut files = Vec::new();
+		// let mut files;
+		// if body_type == BodyType::TallFemale {
+		// 	files = vec![
+		// 		("chara/human/c0201/obj/body/b0001/material/v0001/mt_c0201b0001_q.mtrl".to_string(), "files/bibomtrl/c0201b0001.mtrl".to_string()),
+		// 		("chara/human/c0401/obj/body/b0001/material/v0001/mt_c0401b0001_q.mtrl".to_string(), "files/bibomtrl/c0401b0001.mtrl".to_string()),
+		// 		("chara/human/c1401/obj/body/b0001/material/v0001/mt_c1401b0001_q.mtrl".to_string(), "files/bibomtrl/c1401b0001.mtrl".to_string()),
+		// 		("chara/human/c1401/obj/body/b0101/material/v0001/mt_c1401b0101_q.mtrl".to_string(), "files/bibomtrl/c1401b0101.mtrl".to_string()),
+		// 		("chara/human/c1601/obj/body/b0001/material/v0001/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v1.mtrl".to_string()),
+		// 		("chara/human/c1601/obj/body/b0001/material/v0002/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v2.mtrl".to_string()),
+		// 		("chara/human/c1601/obj/body/b0001/material/v0003/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v3.mtrl".to_string()),
+		// 		("chara/human/c1601/obj/body/b0001/material/v0004/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v4.mtrl".to_string()),
+		// 		("chara/human/c1601/obj/body/b0001/material/v0005/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v5.mtrl".to_string()),
+		// 		("chara/human/c1801/obj/body/b0001/material/v0001/mt_c1801b0001_q.mtrl".to_string(), "files/bibomtrl/c1801b0001.mtrl".to_string()),
+		// 	];
+		// 	
+		// 	_ = std::fs::create_dir(format!("{mod_path}/files/bibomtrl"));
+		// 	for (_, path) in &files {
+		// 		std::fs::copy(&path, format!("{mod_path}/{path}")).unwrap();
+		// 	}
+		// } else {
+		// 	files = Vec::new();
+		// }
 		
 		println!("{body_name}");
 		println!("  Converting Gear");
 		for race_id in body_type.race_ids() {
 			println!("    Race {race_id:02}");
 			files.append(&mut (1..9000).into_par_iter()
-			// files.append(&mut (0204..=0204).into_par_iter()
+			// files.append(&mut (6211..=6211).into_par_iter()
 				.map_init(|| physis::resource::SqPackResource::from_existing(&game_dir), |game, e| {
 					// println!("{e}");
 					let mut files = Vec::new();
@@ -146,6 +142,8 @@ fn main() {
 		
 		// return;
 	}
+	
+	println!("\nDONE!\n  Don't forget to manually convert the bibo version _q to _bibo!!!")
 }
 
 fn fix_model(bytes: &mut Vec<u8>, body_type: BodyType) -> bool {
@@ -231,6 +229,10 @@ fn fix_model(bytes: &mut Vec<u8>, body_type: BodyType) -> bool {
 							mdl::VertexTypeRaw::U16x4 => [r!(u16) as f32, r!(u16) as f32, r!(u16) as f32, r!(u16) as f32],
 						};
 						
+						// if _vertex_index == 0 && lod_index == 0 {
+						// 	println!("{mesh_index} {stream}: {:?} {:?}", decl.typ, decl.usage);
+						// }
+						
 						if matches!(decl.usage, mdl::VertexUsageRaw::Position) {
 							positions.push(val);
 						}
@@ -258,7 +260,7 @@ fn fix_model(bytes: &mut Vec<u8>, body_type: BodyType) -> bool {
 				}
 			}
 			
-			// modify uvs
+			// modify uvs & tangents (for normal map)
 			for stream in 0..3u8 {
 				r!(seek mdl.header.vertex_offsets[lod_index] as u64 + mesh_raw.vertex_buffer_offset[stream as usize] as u64);
 				for vertex_index in 0..mesh_raw.vertex_count as usize {
@@ -279,22 +281,61 @@ fn fix_model(bytes: &mut Vec<u8>, body_type: BodyType) -> bool {
 							mdl::VertexTypeRaw::U16x4 => [r!(u16) as f32, r!(u16) as f32, r!(u16) as f32, r!(u16) as f32],
 						};
 						
-						if matches!(decl.usage, mdl::VertexUsageRaw::Uv) {
-							const EPSILON: f32 = 0.00001f32;
-							let pos = centers.get(vertex_index).unwrap();
-							let is_high = val[0] > 1.0;
-							let mut u = if is_high {val[0] - 1.0} else {val[0]};
-							
-							if pos[0] > EPSILON {
-								u = u / 2.0 + 0.5;
-							} else if pos[0] < EPSILON {
-								u = 0.5 - u / 2.0;
-							} else {
-								u = 0.5;
-								println!("CENTER OF TRIANGLE IS DEAD CENTER!!1!")
+						const EPSILON: f32 = 0.00001f32;
+						let pos = centers.get(vertex_index).unwrap();
+						
+						if matches!(decl.usage, mdl::VertexUsageRaw::Tangent1) {
+							// println!("{:?}: {val:?}", positions[vertex_index]);
+							if pos[0] < EPSILON {
+								val[0] = 1.0 - val[0];
+								val[3] = 1.0 - val[3];
 							}
 							
-							val[0] = if is_high {u + 1.0} else {u};
+							match decl.typ {
+								mdl::VertexTypeRaw::F32x4 => {
+									r!(move -16);
+									let v = &val[0..4];
+									let v = unsafe{std::slice::from_raw_parts(v.as_ptr() as *const u8, 16)};
+									rw.write_all(v).unwrap();
+								}
+								
+								mdl::VertexTypeRaw::F16x4 => {
+									r!(move -8);
+									let v = [half::f16::from_f32(val[0]), half::f16::from_f32(val[1]), half::f16::from_f32(val[2]), half::f16::from_f32(val[3])];
+									let v = unsafe{std::slice::from_raw_parts(v.as_ptr() as *const u8, 8)};
+									rw.write_all(v).unwrap();
+								}
+								
+								mdl::VertexTypeRaw::F8x4 => {
+									r!(move -4);
+									let v = [(val[0] * 255.0).clamp(0.0, 255.0) as u8, (val[1] * 255.0).clamp(0.0, 255.0) as u8, (val[2] * 255.0).clamp(0.0, 255.0) as u8, (val[3] * 255.0).clamp(0.0, 255.0) as u8];
+									rw.write_all(&v).unwrap();
+								}
+								
+								t => panic!("TANGENT WAS A WEIRD FORMAT!!! {t:?}")
+							};
+						}
+						
+						if matches!(decl.usage, mdl::VertexUsageRaw::Uv) {
+							// 6211_dwn for mhyur uses the 2nd pair for smth. for what?
+							// for ui in [0, 2] {
+							for ui in [0] {
+								if val[ui] < 0.0 {continue}
+								
+								let is_high = val[ui] > 1.0;
+								let mut u = if is_high {val[ui] - 1.0} else {val[ui]};
+								
+								if pos[0] > EPSILON {
+									u = u / 2.0 + 0.5;
+								} else if pos[0] < EPSILON {
+									u = 0.5 - u / 2.0;
+								} else {
+									u = 0.5;
+									println!("CENTER OF TRIANGLE IS DEAD CENTER!!1!")
+								}
+								
+								val[ui] = if is_high {u + 1.0} else {u};
+							}
 							
 							match decl.typ {
 								mdl::VertexTypeRaw::F32x2 => {
