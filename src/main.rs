@@ -35,6 +35,7 @@ fn main() {
 	
 	// otopop actually isnt vanilla but twice
 	for body_type in [BodyType::TallFemale, BodyType::TallMale, BodyType::BigMale] {
+	// for body_type in [BodyType::BigMale] {
 	// for body_type in [BodyType::TallFemale, BodyType::TallMale, BodyType::BigMale, BodyType::Lalafell] {
 		let body_name = body_type.name();
 		let mod_name = format!("Asymmetrical Vanilla Gear ({body_name})");
@@ -68,13 +69,15 @@ fn main() {
 		println!("{body_name}");
 		println!("  Converting Gear");
 		for race_id in body_type.race_ids() {
+		// for race_id in &[09] {
 			println!("    Race {race_id:02}");
 			files.append(&mut (1..9000).into_par_iter()
-			// files.append(&mut (6211..=6211).into_par_iter()
+			// files.append(&mut [0666, 6211].into_par_iter()
 				.map_init(|| physis::resource::SqPackResource::from_existing(&game_dir), |game, e| {
 					// println!("{e}");
 					let mut files = Vec::new();
 					for typ in ["top", "dwn", "glv", "sho"] {
+					// for typ in ["dwn"] {
 						let mut race_id = *race_id;
 						let mut path = format!("chara/equipment/e{e:04}/model/c{race_id:02}01e{e:04}_{typ}.mdl");
 						// println!("{path}");
@@ -327,12 +330,15 @@ fn fix_model(bytes: &mut Vec<u8>, body_type: BodyType) -> bool {
 								
 								if pos[0] > EPSILON {
 									u = u / 2.0 + 0.5;
-								} else if pos[0] < EPSILON {
-									u = 0.5 - u / 2.0;
 								} else {
-									u = 0.5;
-									println!("CENTER OF TRIANGLE IS DEAD CENTER!!1!")
+									u = 0.5 - u / 2.0;
 								}
+								// } else if pos[0] < -EPSILON {
+								// 	u = 0.5 - u / 2.0;
+								// } else {
+								// 	u = 0.5;
+								// 	println!("CENTER OF TRIANGLE IS DEAD CENTER!!1!")
+								// }
 								
 								val[ui] = if is_high {u + 1.0} else {u};
 							}
