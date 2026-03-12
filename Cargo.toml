@@ -1,0 +1,11 @@
+[package]
+name = "ffxiv_uv_asymetrizer"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+binrw = "0.14.0"
+bitflags = "2.9.1"
+half = "2.1.0"
+rayon = "1.11.0"
+physis = {git = "https://github.com/redstrate/Physis.git", rev = "821b1d5e11e998bd463da0c7f745717d950985af"}
