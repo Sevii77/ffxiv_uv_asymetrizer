@@ -43,28 +43,6 @@ fn main() {
 		_ = std::fs::create_dir_all(format!("{mod_path}/files"));
 		
 		let mut files = Vec::new();
-		// let mut files;
-		// if body_type == BodyType::TallFemale {
-		// 	files = vec![
-		// 		("chara/human/c0201/obj/body/b0001/material/v0001/mt_c0201b0001_q.mtrl".to_string(), "files/bibomtrl/c0201b0001.mtrl".to_string()),
-		// 		("chara/human/c0401/obj/body/b0001/material/v0001/mt_c0401b0001_q.mtrl".to_string(), "files/bibomtrl/c0401b0001.mtrl".to_string()),
-		// 		("chara/human/c1401/obj/body/b0001/material/v0001/mt_c1401b0001_q.mtrl".to_string(), "files/bibomtrl/c1401b0001.mtrl".to_string()),
-		// 		("chara/human/c1401/obj/body/b0101/material/v0001/mt_c1401b0101_q.mtrl".to_string(), "files/bibomtrl/c1401b0101.mtrl".to_string()),
-		// 		("chara/human/c1601/obj/body/b0001/material/v0001/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v1.mtrl".to_string()),
-		// 		("chara/human/c1601/obj/body/b0001/material/v0002/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v2.mtrl".to_string()),
-		// 		("chara/human/c1601/obj/body/b0001/material/v0003/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v3.mtrl".to_string()),
-		// 		("chara/human/c1601/obj/body/b0001/material/v0004/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v4.mtrl".to_string()),
-		// 		("chara/human/c1601/obj/body/b0001/material/v0005/mt_c1601b0001_q.mtrl".to_string(), "files/bibomtrl/c1601b0001_v5.mtrl".to_string()),
-		// 		("chara/human/c1801/obj/body/b0001/material/v0001/mt_c1801b0001_q.mtrl".to_string(), "files/bibomtrl/c1801b0001.mtrl".to_string()),
-		// 	];
-		// 	
-		// 	_ = std::fs::create_dir(format!("{mod_path}/files/bibomtrl"));
-		// 	for (_, path) in &files {
-		// 		std::fs::copy(&path, format!("{mod_path}/{path}")).unwrap();
-		// 	}
-		// } else {
-		// 	files = Vec::new();
-		// }
 		
 		println!("{body_name}");
 		println!("  Converting Gear");
@@ -80,8 +58,6 @@ fn main() {
 					// for typ in ["dwn"] {
 						let mut race_id = *race_id;
 						let mut path = format!("chara/equipment/e{e:04}/model/c{race_id:02}01e{e:04}_{typ}.mdl");
-						// println!("{path}");
-						// let Some(mut bytes) = game.read(&path) else {continue};
 						
 						let Some(mut bytes) = ({
 							let mut bytes = game.read(&path);
@@ -117,33 +93,24 @@ fn main() {
 		
 		println!("  Writing meta");
 		
-		let files_str = files
-			.into_iter()
-			.map(|(a, b)| format!("\"{a}\":\"{b}\""))
-			.collect::<Vec<_>>()
-			.join(",\n\t\t");
-		std::fs::write(format!("{mod_path}/default_mod.json"), format!(r#"{{
-	"Version": 0,
-	"FileSwaps": {{}},
-	"Manipulations": [],
-	"Files": {{
-		{files_str}
-	}}
-}}"#)).unwrap();
+		std::fs::write(format!("{mod_path}/default_mod.json"), serde_json::to_vec(&serde_json::json!({
+			"Version": 0,
+			"FileSwaps": Vec::<(String, String)>::new(),
+			"Manipulations": Vec::<Vec<u32>>::new(),
+			"Files": files.into_iter().collect::<std::collections::HashMap<_,_>>(),
+		})).unwrap()).unwrap();
 		
-		std::fs::write(format!("{mod_path}/meta.json"), format!(r#"{{
-	"FileVersion": 3,
-	"Name": "{mod_name}",
-	"Author": "Sevii",
-	"Description": "{}",
-	"Image": "",
-	"Version": "{version}",
-	"Website": "https://github.com/Sevii77/ffxiv_uv_asymetrizer",
-	"ModTags": ["{body_name}", "Asymmetrical", "Vanilla", "Gear"],
-	"DefaultPreferredItems": []
-}}"#, DESC.replace("\n", "\\n"))).unwrap();
-		
-		// return;
+		std::fs::write(format!("{mod_path}/meta.json"), serde_json::to_vec(&serde_json::json!({
+			"FileVersion": 3,
+			"Name": mod_name,
+			"Author": "Sevii",
+			"Description": DESC,
+			"Image": "",
+			"Version": version,
+			"Website": "https://github.com/Sevii77/ffxiv_uv_asymetrizer",
+			"ModTags": [body_name, "Asymmetrical", "Vanilla", "Gear"],
+			"DefaultPreferredItems": [],
+		})).unwrap()).unwrap();
 	}
 	
 	println!("\nDONE!\n  Don't forget to manually convert the bibo version _q to _bibo!!!")
